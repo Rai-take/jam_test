@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use Illuminate\Http\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +19,19 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::post('/register', 'App\Http\Controllers\AuthController@register');
-Route::post('/login', 'App\Http\Controllers\AuthController@login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', '\App\Http\Controllers\AuthController@logout')->middleware('auth:sanctum');
+Route::get('/test', '\App\Http\Controllers\AuthController@tokenCheckTest')->middleware('auth:sanctum');
+// Route::post('/token_check', '\App\Http\Controllers\AuthController@tokenCheck')->middleware('auth:sanctum');
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/token_check', function () {
+//         return response()->json(Response::HTTP_OK);
+//     });
+// });
+Route::post('/token_check', '\App\Http\Controllers\AuthController@tokenCheck'); //テスト用認証素通し
+
+
+// Route::get('/test', \App\Http\Controllers\ApiTestController::class)->middleware('auth:sanctum');
+// Route::get('/test', '\App\Http\Controllers\ApiTestController@testStatus')->middleware('auth:sanctum');

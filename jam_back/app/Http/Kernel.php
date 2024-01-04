@@ -41,9 +41,12 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \App\Http\Middleware\VerifyCsrfToken::class,
+
+            // ↓を無効にするとフロントからのログインリクエストが通るが有効にすると通らない。SPA認証の場合、セキュリティの観点で有効にしなければならない
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            // \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // \Illuminate\Session\Middleware\StartSession::class,
         ],
     ];
 
@@ -66,5 +69,9 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        // 認可
+        // 'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+        // 'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+        //
     ];
 }

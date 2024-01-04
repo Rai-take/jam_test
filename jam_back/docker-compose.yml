@@ -21,6 +21,7 @@ services:
             - '.:/var/www/html'
         networks:
             - sail
+            # - jam.group
         depends_on:
             - mysql
             - redis
