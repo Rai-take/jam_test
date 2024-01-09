@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Response;
+use App\Http\Controllers\ArrivalScheduleController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +18,9 @@ use Illuminate\Http\Response;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::post('/register', 'App\Http\Controllers\AuthController@register');
 Route::post('/login', [AuthController::class, 'login']);
@@ -31,7 +33,7 @@ Route::get('/test', '\App\Http\Controllers\AuthController@tokenCheckTest')->midd
 //     });
 // });
 Route::post('/token_check', '\App\Http\Controllers\AuthController@tokenCheck'); //テスト用認証素通し
-
+Route::post('/arrival-schedule', [ArrivalScheduleController::class, 'store']);
 
 // Route::get('/test', \App\Http\Controllers\ApiTestController::class)->middleware('auth:sanctum');
 // Route::get('/test', '\App\Http\Controllers\ApiTestController@testStatus')->middleware('auth:sanctum');

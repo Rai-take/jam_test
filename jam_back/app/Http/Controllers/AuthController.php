@@ -28,41 +28,41 @@ class AuthController extends Controller
     }
 
     // 旧ログイン
-    public function login(Request $request)
-    {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = User::whereEmail($request->email)->first();
-            $user->tokens()->delete();
-            $token = $user->createToken("login:user{$user->id}")->plainTextToken;
-            // $hashedToken = Hash::make($token);
-            //ログインが成功した場合はトークンを返す
-            $cookie = cookie('token', $token, 1); //第３引数は有効期限
-
-            return response()->json(['token' => $token], Response::HTTP_OK)->withCookie($cookie);
-
-            // return response()->json(['token' => $token], Response::HTTP_OK);
-        }
-        return response()->json('Can Not Login.', Response::HTTP_FORBIDDEN);
-    }
-
-    // SPA
     // public function login(Request $request)
     // {
-    //     // $credentials = $request->validate([
-    //     //     'email' => ['required', 'email'],
-    //     //     'password' => ['required'],
-    //     // ]);
-    //     echo 'login echo test';
-    //     // $request->session()->start();
-
-    //     // exit();
     //     if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-    //         $request->session()->regenerate();
+    //         $user = User::whereEmail($request->email)->first();
+    //         $user->tokens()->delete();
+    //         $token = $user->createToken("login:user{$user->id}")->plainTextToken;
+    //         // $hashedToken = Hash::make($token);
+    //         //ログインが成功した場合はトークンを返す
+    //         // $cookie = cookie('token', $token, 1); //第３引数は有効期限
 
-    //         return response()->json(Auth::user(), Response::HTTP_OK);
+    //         // return response()->json(['token' => $token], Response::HTTP_OK)->withCookie($cookie);
+
+    //         return response()->json(['token' => $token], Response::HTTP_OK);
     //     }
-    //     return response()->json('Can Not Login.', Response::HTTP_INTERNAL_SERVER_ERROR);
+    //     return response()->json('Can Not Login.', Response::HTTP_FORBIDDEN);
     // }
+
+    // SPA
+    public function login(Request $request)
+    {
+        // $credentials = $request->validate([
+        //     'email' => ['required', 'email'],
+        //     'password' => ['required'],
+        // ]);
+        Log::info("ログイン関数に飛んでるかテスト");
+        // $request->session()->start();
+
+        // exit();
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $request->session()->regenerate();
+
+            return response()->json(Auth::user(), Response::HTTP_OK);
+        }
+        return response()->json('Can Not Login.', Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 
     public function logout(Request $request)
     {
@@ -76,24 +76,32 @@ class AuthController extends Controller
         // return response()->json('Can Not Logout.', Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    // API
+    // public function tokenCheck(Request $request)
+    // {
+    //     // $postData = Hash::make($request->input('body'));
+    //     $postData = $request->input('body');
+    //     // $hashedToken = Hash::make($postData);
+    //     $tokenCheck = DB::table('personal_access_tokens')
+    //         ->where('id', '=', $postData)
+    //         ->exists();
+    //     Log::info("Post Data: " . $postData);
+    //     Log::info("Token Check Result: " . ($tokenCheck ? 'true' : 'false'));
+    //     if ($tokenCheck) {
+    //         return response()->json([
+    //             'status' => "OKeee",
+    //             'user_test' => $postData
+    //         ], Response::HTTP_OK);
+    //     } else {
+    //         return response()->json('Can Not Login.', Response::HTTP_FORBIDDEN);
+    //     }
+    // }
+    // res返すだけ
     public function tokenCheck(Request $request)
     {
-        // $postData = Hash::make($request->input('body'));
-        $postData = $request->input('body');
-        // $hashedToken = Hash::make($postData);
-        $tokenCheck = DB::table('personal_access_tokens')
-            ->where('id', '=', $postData)
-            ->exists();
-        Log::info("Post Data: " . $postData);
-        Log::info("Token Check Result: " . ($tokenCheck ? 'true' : 'false'));
-        if ($tokenCheck) {
-            return response()->json([
-                'status' => "OKeee",
-                'user_test' => $postData
-            ], Response::HTTP_OK);
-        } else {
-            return response()->json('Can Not Login.', Response::HTTP_FORBIDDEN);
-        }
+        return response()->json([
+            'status' => "OKeee"
+        ], Response::HTTP_OK);
     }
     public function tokenCheckTest(Request $request)
     {
